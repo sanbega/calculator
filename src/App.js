@@ -21,24 +21,38 @@ function App() {
       setNum2(num2 + val);
     }
   }
-  function clickOperation(val) {
-    setCurrentOperation(val);
-  }
+
   function getResult() {
-    switch (currentOperation) {
-      case "+":
-        setResult(Number(num1) + Number(num2));
-        break;
-      case "-":
-        setResult(Number(num1) - Number(num2));
-        break;
-      case "*":
-        setResult(Number(num1) * Number(num2));
-        break;
-      case "/":
-        setResult(Number(num1) / Number(num2));
-        break;
+    fetch("http://localhost:4000/operations", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        num1,
+        num2,
+        operation: currentOperation,
+      }),
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then((res) => {
+        setResult(res.result);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  function setOperation(operation) {
+    if (result) {
+      setNum1(result);
+      setNum2("");
+      setResult("");
     }
+
+    setCurrentOperation(operation);
   }
 
   return (
@@ -52,22 +66,6 @@ function App() {
             {result ? result : !currentOperation ? num1 : num2}
           </div>
         </div>
-        <button
-          onClick={() => {
-            clickNumber(".");
-          }}
-          className="same"
-        >
-          .
-        </button>
-        <button
-          onClick={() => {
-            clickNumber(0);
-          }}
-          className="same"
-        >
-          0
-        </button>
         <button
           onClick={() => {
             clickNumber(1);
@@ -140,43 +138,62 @@ function App() {
         >
           9
         </button>
-        <button onClick={allClear} className="spant-two">
-          C
+        <button
+          onClick={() => {
+            clickNumber(".");
+          }}
+          className="same"
+        >
+          .
         </button>
         <button
           onClick={() => {
-            clickOperation("+");
+            clickNumber(0);
           }}
-          className="signos"
+          className="same"
+        >
+          0
+        </button>
+        <button onClick={allClear} className="clean">
+          C
+        </button>
+        <button onClick={getResult} className="same">
+          =
+        </button>
+        <button
+          id="plus"
+          onClick={() => {
+            setOperation("+");
+          }}
+          className="operation"
         >
           +
         </button>
         <button
+          id="minus"
           onClick={() => {
-            clickOperation("-");
+            setOperation("-");
           }}
-          className="signos"
+          className="operation"
         >
           -
         </button>
         <button
+          id="multiply"
           onClick={() => {
-            clickOperation("*");
+            setOperation("*");
           }}
-          className="signos"
+          className="operation"
         >
           *
         </button>
         <button
           onClick={() => {
-            clickOperation("/");
+            setOperation("/");
           }}
-          className="signos"
+          className="operation"
         >
           /
-        </button>
-        <button onClick={getResult} className="same">
-          =
         </button>
       </div>
     </div>
