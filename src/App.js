@@ -1,5 +1,5 @@
-import "./App.css";
 import React, { useState } from "react";
+import "./App.css";
 
 function App() {
   const [num1, setNum1] = useState("");
@@ -58,7 +58,7 @@ function App() {
           }}
           className="same"
         >
-          1
+          .
         </button>
         <button
           onClick={() => {
@@ -66,7 +66,7 @@ function App() {
           }}
           className="same"
         >
-          1
+          0
         </button>
         <button
           onClick={() => {
